@@ -16,6 +16,8 @@ router.get('/:id',
 
 router.post( '/', 
     // Validations
+    param('id')
+        .isInt().withMessage('Id must be an integer'), 
     body('name')
         .notEmpty().withMessage('Product name is required'),
     body('price')
@@ -29,6 +31,8 @@ router.post( '/',
 
 router.put('/:id', 
     // Validations
+    param('id')
+        .isInt().withMessage('Id must be an integer'), 
     body('name')
         .notEmpty().withMessage('Product name is required'),
     body('price')
@@ -41,7 +45,11 @@ router.put('/:id',
     updateProduct 
 );
 
-router.patch('/:id', updateAvailability );
+router.patch('/:id', 
+    param('id')
+        .isInt().withMessage('Id must be an integer'), 
+    handleInputErrors,
+    updateAvailability );
 
 router.delete('/', (req, res) => {
     res.json('From DELETE');
