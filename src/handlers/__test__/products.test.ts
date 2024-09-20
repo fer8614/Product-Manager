@@ -12,6 +12,32 @@ describe('POST /api/products', () => {
         expect(response.body.errors).not.toHaveLength(2);
     });
 
+    it('should validate that the price ir greater than 0', async () => {
+        const response = await request(server).post('/api/products').send({
+            name: 'Mouse - Test',
+            price: 0
+        });
+        expect(response.status).toBe(400);
+        expect(response.body).toHaveProperty('errors');
+        expect(response.body.errors).toHaveLength(1);
+
+        expect(response.status).not.toBe(404);
+        expect(response.body.errors).not.toHaveLength(2);
+    });
+
+    it('should validate that the price is a number and greater than 0', async () => {
+        const response = await request(server).post('/api/products').send({
+            name: 'Mouse - Test',
+            price: 'hello'
+        });
+        expect(response.status).toBe(400);
+        expect(response.body).toHaveProperty('errors');
+        expect(response.body.errors).toHaveLength(2);
+
+        expect(response.status).not.toBe(404);
+        expect(response.body.errors).not.toHaveLength(4);
+    });
+
     it('should create a new products', async () => {
         const response = await request(server).post('/api/products').send({
             name: 'Mouse - Test',
