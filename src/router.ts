@@ -16,13 +16,11 @@ router.get('/:id',
 
 router.post( '/', 
     // Validations
-    param('id')
-        .isInt().withMessage('Id must be an integer'), 
     body('name')
         .notEmpty().withMessage('Product name is required'),
     body('price')
         .isNumeric().withMessage('Price must be a number')
-        .withMessage('Price is required')
+        .notEmpty().withMessage('Price is required')
         .custom( value => value > 0 ).withMessage('Price must be greater than 0'),
     
     handleInputErrors,
@@ -37,7 +35,7 @@ router.put('/:id',
         .notEmpty().withMessage('Product name is required'),
     body('price')
         .isNumeric().withMessage('Price must be a number')
-        .withMessage('Price is required')
+        .notEmpty().withMessage('Price is required')
         .custom( value => value > 0 ).withMessage('Price must be greater than 0'),
     body('availability')
         .isBoolean().withMessage('Availability must be a boolean'),
