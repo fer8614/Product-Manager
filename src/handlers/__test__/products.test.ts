@@ -73,4 +73,35 @@ describe('GET /api/products', () => {
     })
 })
 
+describe('GET /api/products/:id', () => {   
+    it('should return a 404 response for a non-existent product', async () => {
+        const productId = 9999;
+        const response = await request(server).get(`/api/products/${productId}`);
+        expect(response.status).toBe(404);
+        expect(response.body).toHaveProperty('error');
+        expect(response.body.error).toBe('Product not found');
+    })
+
+    it('should check a valid ID in the URL', async () => {
+        const productId = 'hello';
+        const response = await request(server).get(`/api/products/${productId}`);
+        expect(response.status).toBe(400);
+        expect(response.body).toHaveProperty('errors');
+        expect(response.body.errors).toHaveLength(1);
+        expect(response.body.errors[0].msg).toBe('Id must be an integer');
+    })
+
+    it('should get a JSON response with a single product', async () => {
+        const productId = 1;
+        const response = await request(server).get(`/api/products/${productId}`);
+        expect(response.status).toBe(200);
+        expect(response.headers['content-type']).toMatch(/json/);
+        expect(response.body).toHaveProperty('data');
+        expect(response.body.data).toHaveProperty('id', productId);
+        expect(response.body.data).toHaveProperty('name', 'Mouse - Test');
+        expect(response.body.data).toHaveProperty('price', 51);
+        expect(response.body.data).toHaveProperty('availability', true);
+    })
+})
+
 
