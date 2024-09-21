@@ -104,4 +104,86 @@ describe('GET /api/products/:id', () => {
     })
 })
 
+describe('PUT /api/products/:id', () => {
+    it('should check a valid ID in the URL', async () => {
+        const productId = 'hello';
+        const response = await request(server).put(`/api/products/${productId}`).send({
+            name: 'Mouse - Test',
+            price: 51,
+            availability: true
+        });
+        expect(response.status).toBe(400);
+        expect(response.body).toHaveProperty('errors');
+        expect(response.body.errors).toHaveLength(1);
+        expect(response.body.errors[0].msg).toBe('Id must be an integer');
+    })
+
+    it('should describe validation error messages when updating a product', async () => {
+        const response = await request(server).put('/api/products/1').send({});
+        expect(response.status).toBe(400);
+      expect(response.body).toHaveProperty('errors');
+      expect(response.body.errors).toBeTruthy();
+      expect(response.body.errors).toHaveLength(5);
+
+      expect(response.status).not.toBe(200);
+      expect(response.body).not.toHaveProperty('data');
+    });
+
+    it('should update a product', async () => {
+        const response = await request(server).put('/api/products/1').send({
+            name: 'Keyboard - Test',
+            price: 101,
+            availability: true
+        })
+        expect(response.status).toBe(200);
+        expect(response.body).toHaveProperty('data');
+        expect(response.body.data).toHaveProperty('id', 1);
+        expect(response.body.data).toHaveProperty('name', 'Keyboard - Test');
+        expect(response.body.data).toHaveProperty('price', 101);
+        expect(response.body.data).toHaveProperty('availability', true);
+    })
+
+    it('should validate that the price ir greater than 0', async () => {
+        const response = await request(server).put('/api/products/1').send({
+            name: 'Keyboard - Test',
+            price: 0,
+            availability: true
+        })
+        expect(response.status).toBe(400);
+        expect(response.body).toHaveProperty('errors');
+        expect(response.body.errors).toHaveLength(1);
+        expect(response.body.errors[0].msg).toBe('Price must be greater than 0');
+    })
+
+    it('should return a 404 response for a non-existent product', async () => {
+        const productId = 9999;
+        const response = await request(server).put(`/api/products/${productId}`).send({
+            name: 'Keyboard - Test',
+            price: 101,
+            availability: true
+        })
+        expect(response.status).toBe(404);
+        expect(response.body).toHaveProperty('error');
+        expect(response.body.error).toBe('Product not found');
+    })
+
+    it('should updae an existing product', async () => {
+        const response = await request(server).put('/api/products/1').send({
+            name: 'Keyboard - Test',
+            price: 101,
+            availability: true
+        })
+        expect(response.status).toBe(200);
+        expect(response.body).toHaveProperty('data');
+        expect(response.body.data).toHaveProperty('id', 1);
+        expect(response.body.data).toHaveProperty('name', 'Keyboard - Test');
+        expect(response.body.data).toHaveProperty('price', 101);
+        expect(response.body.data).toHaveProperty('availability', true);
+
+        expect(response.status).not.toBe(400);
+        expect(response.body).not.toHaveProperty('errors');
+    })
+
+})
+
 

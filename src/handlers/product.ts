@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import Product from "../models/Product.model";
+import { error } from "console";
 
 export const getProducts = async ( req : Request, res : Response ) => {
     try {
@@ -47,7 +48,7 @@ export const updateProduct = async ( req: Request, res: Response ) => {
  
     if( !product ) {
         return res.status(404).json({ 
-            message: 'Product not found' 
+            error: 'Product not found' 
         });
     }
 
