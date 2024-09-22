@@ -186,6 +186,39 @@ describe('PUT /api/products/:id', () => {
 
 })
 
+describe('PATCH /api/products/:id', () => {
+    it('should return a 404 response for a non-existent product', async () => {
+        const productId = 9999;
+        const response = await request(server).patch(`/api/products/${productId}`);
+        expect(response.status).toBe(404);
+        expect(response.body).toHaveProperty('error');
+        expect(response.body.error).toBe('Product not found');
+
+        expect(response.status).not.toBe(200);
+        expect(response.body).not.toHaveProperty('data');
+    })
+
+    it('should update the product availability', async () => {
+        const response = await request(server).patch('/api/products/1')
+        expect(response.status).toBe(200);
+        expect(response.body).toHaveProperty('data');
+        expect(response.body.data.availability).toBe(false);
+
+        expect(response.status).not.toBe(404);
+        expect(response.status).not.toBe(400);
+        expect(response.body).not.toHaveProperty('error');
+        })
+    
+    it('should check a valid ID in the URL', async () => {
+        const productId = 'hello';
+        const response = await request(server).patch(`/api/products/${productId}`);
+        expect(response.status).toBe(400);
+        expect(response.body).toHaveProperty('errors');
+        expect(response.body.errors).toHaveLength(1);
+        expect(response.body.errors[0].msg).toBe('Id must be an integer');
+    })
+})
+
 describe('DELETE /api/products/:id', () => {
     it('should check a valid ID in the URL', async () => {
         const productId = 'hello';
