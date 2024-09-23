@@ -4,8 +4,61 @@ import { createProduct, deleteProduct, getProductById, getProducts, updateAvaila
 import { handleInputErrors } from './middleware';
 
 const router = Router();
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Product:
+ *       type: object
+ *       properties:
+ *         id:
+ *           type: integer
+ *           description: The product ID
+ *           example: 1
+ *         name:
+ *           type: string
+ *           description: The name of the product
+ *           example: Keyboard
+ *         price:
+ *           type: number
+ *           description: The price of the product
+ *           example: 51
+ *         availability:
+ *           type: boolean
+ *           description: The availability of the product
+ *           example: true
+ *       required:
+ *         - name
+ *         - price
+ *         - availability
+ *       example:
+ *         id: 1
+ *         name: Keyboard
+ *         price: 101
+ *         availability: true
+ *   responses:
+ *     InvalidInput:
+ *       description: Invalid input
+ */
 
-
+/**
+ * @swagger
+ * /api/products:
+ *   get:
+ *     summary: Get a list of products
+ *     tags:
+ *       - Products
+ *     description: Get a list of products
+ *     responses:
+ *       200:
+ *         description: Successful response 
+ *         content:
+ *           application/json:
+ *             schema:  
+ *               type: array
+ *               items:
+ *                  $ref: '#/components/schemas/Product'
+ */
 //Routing
 router.get('/', getProducts); 
 router.get('/:id',
