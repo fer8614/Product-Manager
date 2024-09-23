@@ -1,20 +1,20 @@
-import express from 'express';
-import colors from 'colors';
-import swaggerUi from 'swagger-ui-express';
-import swaggerSpec from './config/swagger';
-import router from './router';
-import db from './config/db';
+import express from "express";
+import colors from "colors";
+import swaggerUi from "swagger-ui-express";
+import swaggerSpec, { swaggerUiOptions } from "./config/swagger";
+import router from "./router";
+import db from "./config/db";
 
 //Connect to DB
 export async function connectDB() {
-    try {
-        await db.authenticate();
-        db.sync();
-        // console.log( colors.blue.bold ('Connection has been established successfully.'));    
-    } catch (error) {
-        // console.log(error);
-        console.log( colors.red.bold ('Error connect to DB'));
-    }
+  try {
+    await db.authenticate();
+    db.sync();
+    // console.log( colors.blue.bold ('Connection has been established successfully.'));
+  } catch (error) {
+    // console.log(error);
+    console.log(colors.red.bold("Error connect to DB"));
+  }
 }
 
 connectDB();
@@ -25,9 +25,13 @@ const server = express();
 //Read data from forms
 server.use(express.json());
 
-server.use('/api/products', router);
+server.use("/api/products", router);
 
 //Docs
-server.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+server.use(
+  "/docs",
+  swaggerUi.serve,
+  swaggerUi.setup(swaggerSpec, swaggerUiOptions),
+);
 
 export default server;
