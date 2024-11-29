@@ -12,11 +12,11 @@ export async function connectDB() {
   try {
     await db.authenticate();
     db.sync();
-    // console.log(
-    //   colors.blue.bold("Connection has been established successfully."),
-    // );
+    console.log(
+      colors.blue.bold("Connection has been established successfully."),
+    );
   } catch (error) {
-    // console.log(error);
+    console.log(error);
     console.log(colors.red.bold("Error connect to DB"));
   }
 }
