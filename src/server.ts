@@ -12,11 +12,11 @@ export async function connectDB() {
   try {
     await db.authenticate();
     db.sync();
-    // console.log(
-    //   colors.blue.bold("Connection has been established successfully."),
-    // );
+    console.log(
+      colors.blue.bold("Connection has been established successfully."),
+    );
   } catch (error) {
-    // console.log(error);
+    console.log(error);
     console.log(colors.red.bold("Error connect to DB"));
   }
 }
@@ -29,7 +29,13 @@ const server = express();
 // Enable CORS
 const corsOptions: CorsOptions = {
   origin: function (origin, callback) {
-    if (origin === process.env.FRONTEND_URL) {
+    const whitelist = [process.env.FRONTEND_URL];
+
+    if (process.argv[2] === "--api") {
+      whitelist.push(undefined);
+    }
+
+    if (whitelist.includes(origin)) {
       callback(null, true);
     } else {
       callback(new Error("Not allowed by CORS"));
